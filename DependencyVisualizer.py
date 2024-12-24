@@ -10,12 +10,15 @@ from collections import defaultdict
 class DependencyVisualizer:
     def __init__(self, folder:str):
         self.directory = folder
+        self.included_files = None
+        self.exclude_files = None
 
     def reset(self):
         self.all_functions = {}
         self.files_count = 0
+        
 
-    def parse_python_files(self, included_files=None, excluded_files=None):
+    def parse_python_files(self):
 
         self.reset()
 
@@ -26,10 +29,10 @@ class DependencyVisualizer:
                     abs_path = os.path.join(root, file).replace('\\', '/')
                     python_files.append(abs_path)
 
-        if included_files:
-            files = [file for file in python_files if file in included_files]
-        if excluded_files:
-            files = [file for file in python_files if file not in excluded_files]
+        if self.included_files:
+            files = [file for file in python_files if file in self.included_files]
+        if self.excluded_files:
+            files = [file for file in python_files if file not in self.excluded_files]
 
         for file in files:
             self.files_count += 1
