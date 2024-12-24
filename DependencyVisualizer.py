@@ -15,6 +15,7 @@ class DependencyVisualizer:
         directory (str): The directory containing Python files to analyze.
         included_files (list[str] or None): A list of specific files to include in the analysis.
         exclude_files (list[str] or None): A list of specific files to exclude from the analysis.
+        git_visualiser (GitVisualizer or None): An instance of GitVisualizer to fetch commit history.
     """
 
     def __init__(self, folder:str):
@@ -27,6 +28,7 @@ class DependencyVisualizer:
         self.directory = folder
         self.included_files = None
         self.exclude_files = None
+        self.git_visualiser = None
 
     def reset(self):
         """
