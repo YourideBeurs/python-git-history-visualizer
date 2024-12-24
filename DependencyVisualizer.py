@@ -8,18 +8,41 @@ import networkx as nx
 from collections import defaultdict
 
 class DependencyVisualizer:
+    """
+    A class to visualize and analyze function dependencies in Python files.
+
+    Attributes:
+        directory (str): The directory containing Python files to analyze.
+        included_files (list[str] or None): A list of specific files to include in the analysis.
+        exclude_files (list[str] or None): A list of specific files to exclude from the analysis.
+    """
+
     def __init__(self, folder:str):
+        """
+        Initializes the DependencyVisualizer with the specified directory.
+
+        Args:
+            folder (str): The directory containing Python files.
+        """
         self.directory = folder
         self.included_files = None
         self.exclude_files = None
 
     def reset(self):
+        """
+        Resets the internal state, clearing any previously parsed data.
+        """
         self.all_functions = {}
         self.files_count = 0
-        
 
     def parse_python_files(self):
+        """
+        Parses all Python files in the specified directory, extracting function dependencies.
 
+        This method identifies all `.py` files in the directory (and subdirectories),
+        filters them based on `included_files` and `exclude_files` (if specified),
+        and extracts function dependencies using the `parse_file` function.
+        """
         self.reset()
 
         python_files = []
@@ -47,6 +70,22 @@ class DependencyVisualizer:
         print(f"Python files parsed: {self.files_count}")	
 
     def show_dependencies(self,  **kwargs):
+        """
+        Visualizes the function dependencies as a directed graph.
+
+        Args:
+            **kwargs: Optional parameters to customize the plot, such as:
+                - figsize (tuple): Size of the figure (default: (10, 8)).
+                - with_labels (bool): Whether to display labels on nodes (default: True).
+                - node_color (str): Color of the nodes (default: 'skyblue').
+                - node_size (int): Size of the nodes (default: 2000).
+                - edge_color (str): Color of the edges (default: 'gray').
+                - linewidths (float): Width of the edges (default: 1).
+                - font_size (int): Font size for labels (default: 10).
+                - font_weight (str): Font weight for labels (default: 'bold').
+                - arrowsize (int): Size of the arrows (default: 20).
+                - alpha (float): Transparency of the plot (default: 0.8).
+        """
         G = nx.DiGraph()
 
         for func, deps in self.all_functions.items():
@@ -73,6 +112,13 @@ class DependencyVisualizer:
         plt.show()
         
     def save_dependencies(self, path:str, **kwargs):
+        """
+        Saves the function dependency graph as an image.
+
+        Args:
+            path (str): The file path where the image will be saved.
+            **kwargs: Optional parameters for customizing the plot (same as `show_dependencies`).
+        """
         G = nx.DiGraph()
 
         for func, deps in self.all_functions.items():
@@ -99,12 +145,31 @@ class DependencyVisualizer:
         plt.savefig(path, dpi=300, bbox_inches='tight')
 
 def parse_file(file_path:str):
+    """
+    Parses a Python file and extracts function dependencies.
+
+    Args:
+        file_path (str): The path to the Python file.
+
+    Returns:
+        dict: A dictionary where keys are function names and values are sets of
+              called function names within the same file.
+    """
     with open(file_path, 'r') as f:
         tree = ast.parse(f.read(), filename=file_path)
 
     functions = defaultdict(set)
     class FunctionVisitor(ast.NodeVisitor):
+        """
+        AST visitor class to extract function calls within function definitions.
+        """
         def visit_FunctionDef(self, node):
+            """
+            Visits a function definition node and collects its dependencies.
+
+            Args:
+                node (ast.FunctionDef): The function definition node.
+            """
             current_function = node.name
             for child in ast.walk(node):
                 if isinstance(child, ast.Call) and isinstance(child.func, ast.Attribute):
