@@ -163,6 +163,25 @@ class DependencyVisualizer:
             callee_file = '.'.join(callee.split('.')[:-1])
             self.file_dependencies.add((caller_file, callee_file))
 
+    def custom_filter_file_dependencies(self, callback):
+        """
+        Applies a custom filter to the parsed file dependencies.
+
+        Args:
+            callback: A function that takes a set of dependencies and returns a filtered set.
+
+        """
+        self.file_dependencies = callback(self.file_dependencies)
+
+    def custom_filter_function_dependencies(self, callback):
+        """
+        Applies a custom filter to the parsed function dependencies.
+
+        Args:
+            callback: A function that takes a set of dependencies and returns a filtered set.
+        """
+        self.function_dependencies = callback(self.function_dependencies)
+
     def show_file_dependencies(self, files_callback=None, **kwargs):
         """ Visualizes the file dependencies as a directed graph.
 
