@@ -1,11 +1,9 @@
 import sqlite3
-import os
 
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 import seaborn as sns
 import networkx as nx
-
-import matplotlib.cm as cm
 
 from datetime import datetime
 
@@ -14,9 +12,6 @@ class CodeVisualizer:
         self.path = path
 
     def build_db_if_not_exists(self):
-        if os.path.exists(self.path):
-            os.remove(self.path)
-
         conn = sqlite3.connect(self.path)
         cursor = conn.cursor()
 
