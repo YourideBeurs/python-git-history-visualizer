@@ -70,6 +70,21 @@ git_visualizer.parse_commits()
 git_visualizer.show_file_changes_scatter()
 ```
 
+## Example Workflow
+
+### Display file dependencies with git colors
+
+The full example can be found at `examples/display_file_dependencies_with_git_colors.py`
+
+```python
+from CodeVisualizer import CodeVisualizer
+
+visualizer = CodeVisualizer('./codebase.db')
+visualizer.show_file_dependencies()
+```
+
+![alt text](images/network_with_colors.png)
+
 ## Licence
 
 This project is licensed under the MIT License. See the LICENSE file for details.
