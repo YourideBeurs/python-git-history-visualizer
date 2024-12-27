@@ -1,0 +1,30 @@
+Table commits {
+  hash text PK
+  author text
+  date text
+}
+
+Table commit_files {
+  commit_hash text PK
+  file_path text PK
+}
+
+Table files {
+  full_path text PK
+}
+
+Table functions {
+  name text PK
+  file_full_path text PK
+}
+
+Table function_dependencies {
+  caller_path text PK
+  callee_path text PK
+}
+
+Ref: functions.name < function_dependencies.caller_path
+Ref: functions.name < function_dependencies.callee_path
+Ref: files.full_path < functions.file_full_path
+Ref: files.full_path < commit_files.file_path
+Ref: commits.hash < commit_files.commit_hash
